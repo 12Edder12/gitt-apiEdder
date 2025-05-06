@@ -1,6 +1,7 @@
 import {
   pgTable,
-  uuid,
+  serial,
+  integer,
   date,
   decimal,
   text,
@@ -12,12 +13,12 @@ import { item } from './item/item'
 import { claimStatus } from 'drizzle/schema/enums/inventory'
 import { relations } from 'drizzle-orm'
 
-export const insuranceClaim = pgTable('insurance_claim', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  policyId: uuid('policy_id')
+export const insuranceClaim = pgTable('insurance_claims', {
+  id: serial('id').primaryKey(),
+  policyId: integer('policy_id')
     .references(() => insurancePolicy.id)
     .notNull(),
-  itemId: uuid('item_id')
+  itemId: integer('item_id')
     .references(() => item.id)
     .notNull(),
   claimDate: date('claim_date').notNull(),

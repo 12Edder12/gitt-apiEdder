@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   date,
   decimal,
@@ -11,10 +11,9 @@ import { policyStatus } from 'drizzle/schema/enums/inventory'
 import { relations } from 'drizzle-orm'
 import { insuredAssetDetail } from './insuredAssetDetail'
 import { insuranceClaim } from './insuranceClaim'
-import { item } from './item/item'
 
-export const insurancePolicy = pgTable('insurance_policy', {
-  id: uuid('id').primaryKey().defaultRandom(),
+export const insurancePolicy = pgTable('insurance_policies', {
+  id: serial('id').primaryKey(),
   policyNumber: varchar('policy_number', { length: 50 }).notNull().unique(),
   insuranceCompany: varchar('insurance_company', { length: 255 }).notNull(),
   policyType: varchar('policy_type', { length: 100 }),
@@ -43,6 +42,5 @@ export const insurancePolicyRelations = relations(
   ({ many }) => ({
     insuredAssets: many(insuredAssetDetail),
     claims: many(insuranceClaim),
-    items: many(item),
   }),
 )

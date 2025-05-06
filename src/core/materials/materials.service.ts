@@ -12,9 +12,9 @@ import { MaterialResDto } from './dto/res/material-res.dto'
 
 @Injectable()
 export class MaterialsService {
-  constructor(private dbService: DatabaseService) {}
+  constructor(private readonly dbService: DatabaseService) {}
 
-  private materialsWithoutDates = excludeColumns(
+  private readonly materialsWithoutDates = excludeColumns(
     material,
     'registrationDate',
     'updateDate',
@@ -53,7 +53,7 @@ export class MaterialsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const [record] = await this.dbService.db
       .select(this.materialsWithoutDates)
       .from(material)
@@ -68,7 +68,7 @@ export class MaterialsService {
     return plainToInstance(MaterialResDto, record)
   }
 
-  async existByName(name?: string, excludeId?: string) {
+  async existByName(name?: string, excludeId?: number) {
     if (!name) return true
     const [record] = await this.dbService.db
       .select(this.materialsWithoutDates)
@@ -109,7 +109,7 @@ export class MaterialsService {
     return plainToInstance(MaterialResDto, newMaterial)
   }
 
-  async update(id: string, dto: UpdateMaterialDto) {
+  async update(id: number, dto: UpdateMaterialDto) {
     await this.findOne(id)
 
     const alreadyExistMaterial = await this.existByName(dto.name, id)
@@ -131,7 +131,7 @@ export class MaterialsService {
     return plainToInstance(MaterialResDto, updatedMaterial)
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id)
 
     const [deletedMaterial] = await this.dbService.db

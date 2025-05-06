@@ -40,13 +40,13 @@ export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
 
   @ApiPropertyOptional({
     description: 'parentCategoryId (is optional)',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: 1,
   })
-  parentCategoryId?: string
+  parentCategoryId?: number
 
   @ApiPropertyOptional({
     description: 'standardUsefulLife (is optional)',
-    example: '5',
+    example: 5,
   })
   standardUsefulLife?: number
 

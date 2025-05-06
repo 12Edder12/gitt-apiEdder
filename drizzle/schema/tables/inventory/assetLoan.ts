@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   date,
   text,
@@ -12,9 +12,9 @@ import { user } from '../users/user'
 import { assetLoanStatus } from 'drizzle/schema/enums/inventory'
 import { relations } from 'drizzle-orm'
 
-export const assetLoan = pgTable('asset_loan', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  itemId: uuid('item_id')
+export const assetLoan = pgTable('asset_loans', {
+  id: serial('id').primaryKey(),
+  itemId: integer('item_id')
     .references(() => item.id, { onDelete: 'cascade' })
     .notNull(),
   beneficiaryInstitution: varchar('beneficiary_institution', {

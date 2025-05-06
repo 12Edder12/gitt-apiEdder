@@ -10,9 +10,9 @@ import { UpdateStatusDto } from './dto/req/update-status.dto'
 
 @Injectable()
 export class StatesService {
-  constructor(private dbService: DatabaseService) {}
+  constructor(private readonly dbService: DatabaseService) {}
 
-  private statesWithoutDates = excludeColumns(
+  private readonly statesWithoutDates = excludeColumns(
     status,
     'registrationDate',
     'updateDate',
@@ -46,7 +46,7 @@ export class StatesService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const [record] = await this.dbService.db
       .select(this.statesWithoutDates)
       .from(status)
@@ -86,7 +86,7 @@ export class StatesService {
     return newStatus
   }
 
-  async update(id: string, dto: UpdateStatusDto) {
+  async update(id: number, dto: UpdateStatusDto) {
     await this.findOne(id)
 
     const updateData: Partial<UpdateStatusDto> = {
@@ -103,7 +103,7 @@ export class StatesService {
     return updateStatus
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.findOne(id)
 
     const [deletedStatus] = await this.dbService.db

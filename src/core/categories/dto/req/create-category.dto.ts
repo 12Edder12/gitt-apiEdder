@@ -34,14 +34,14 @@ export class CreateCategoryDto {
 
   @ApiProperty({
     description: 'parentCategoryId (is optional)',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: 1,
   })
   @IsOptional()
-  parentCategoryId?: string
+  parentCategoryId?: number
 
   @ApiProperty({
     description: 'standardUsefulLife (is optional)',
-    example: '5',
+    example: 5,
   })
   @IsInt({ message: 'standardUsefulLife must be a integer' })
   @IsOptional()

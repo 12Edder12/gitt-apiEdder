@@ -1,6 +1,7 @@
 import {
   pgTable,
-  uuid,
+  serial,
+  integer,
   text,
   varchar,
   boolean,
@@ -13,17 +14,17 @@ import { status } from '../inventory/status'
 import { relations } from 'drizzle-orm'
 
 export const loanDetail = pgTable(
-  'loan_detail',
+  'loan_details',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
-    loanId: uuid('loan_id')
+    id: serial('id').primaryKey(),
+    loanId: integer('loan_id')
       .references(() => loan.id, { onDelete: 'cascade' })
       .notNull(),
-    itemId: uuid('item_id')
+    itemId: integer('item_id')
       .references(() => item.id)
       .notNull(),
-    exitStatusId: uuid('exit_status_id').references(() => status.id),
-    returnStatusId: uuid('return_status_id').references(() => status.id),
+    exitStatusId: integer('exit_status_id').references(() => status.id),
+    returnStatusId: integer('return_status_id').references(() => status.id),
     exitObservations: text('exit_observations'),
     returnObservations: text('return_observations'),
     exitImage: varchar('exit_image', { length: 255 }),
@@ -38,9 +39,7 @@ export const loanDetail = pgTable(
       mode: 'date',
     }).defaultNow(),
   },
-  (t) => ({
-    unq: unique().on(t.loanId, t.itemId),
-  }),
+  (t) => [unique().on(t.loanId, t.itemId)],
 )
 
 export const loanDetailRelations = relations(loanDetail, ({ one }) => ({

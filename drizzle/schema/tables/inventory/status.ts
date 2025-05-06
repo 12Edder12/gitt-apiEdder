@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   text,
   boolean,
@@ -11,8 +11,8 @@ import { item } from './item/item'
 import { statusChange } from './statusChange'
 import { loanDetail } from '../loans/loanDetail'
 
-export const status = pgTable('status', {
-  id: uuid('id').primaryKey().defaultRandom(),
+export const status = pgTable('states', {
+  id: serial('id').primaryKey(),
   name: varchar('name', { length: 50 }).notNull().unique(),
   description: text('description'),
   requiresMaintenance: boolean('requires_maintenance').default(false),

@@ -1,6 +1,7 @@
 import {
   pgTable,
-  uuid,
+  serial,
+  integer,
   decimal,
   varchar,
   text,
@@ -12,13 +13,13 @@ import { item } from './item/item'
 import { relations } from 'drizzle-orm'
 
 export const exitDetail = pgTable(
-  'exit_detail',
+  'exit_details',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
-    processId: uuid('process_id')
+    id: serial('id').primaryKey(),
+    processId: integer('process_id')
       .references(() => exitProcess.id, { onDelete: 'cascade' })
       .notNull(),
-    itemId: uuid('item_id')
+    itemId: integer('item_id')
       .references(() => item.id)
       .notNull(),
     appraisalValue: decimal('appraisal_value', { precision: 12, scale: 2 }),

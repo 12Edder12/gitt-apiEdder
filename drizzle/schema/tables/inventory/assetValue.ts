@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   date,
   decimal,
@@ -11,9 +11,9 @@ import {
 import { item } from './item/item'
 import { relations } from 'drizzle-orm'
 
-export const assetValue = pgTable('asset_value', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  itemId: uuid('item_id')
+export const assetValue = pgTable('asset_values', {
+  id: serial('id').primaryKey(),
+  itemId: integer('item_id')
     .references(() => item.id, { onDelete: 'cascade' })
     .notNull()
     .unique(),

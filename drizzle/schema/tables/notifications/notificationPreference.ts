@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   boolean,
   timestamp,
@@ -11,9 +11,9 @@ import { user } from '../users/user'
 import { relations } from 'drizzle-orm'
 
 export const notificationPreference = pgTable(
-  'notification_preference',
+  'notification_preferences',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
+    id: serial('id').primaryKey(),
     userId: integer('user_id')
       .references(() => user.id, { onDelete: 'cascade' })
       .notNull(),

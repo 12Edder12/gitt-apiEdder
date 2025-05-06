@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   timestamp,
   text,
   varchar,
@@ -10,9 +10,9 @@ import { label } from './label'
 import { user } from '../users/user'
 import { relations } from 'drizzle-orm'
 
-export const scanRecord = pgTable('scan_record', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  labelId: uuid('label_id')
+export const scanRecord = pgTable('scan_records', {
+  id: serial('id').primaryKey(),
+  labelId: integer('label_id')
     .references(() => label.id, { onDelete: 'cascade' })
     .notNull(),
   userId: integer('user_id')

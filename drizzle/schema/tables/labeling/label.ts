@@ -1,4 +1,10 @@
-import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core'
+import {
+  pgTable,
+  serial,
+  integer,
+  varchar,
+  timestamp,
+} from 'drizzle-orm/pg-core'
 import {
   labelType,
   labelFormat,
@@ -8,9 +14,9 @@ import { item } from '../inventory/item/item'
 import { relations } from 'drizzle-orm'
 import { scanRecord } from './scanRecord'
 
-export const label = pgTable('label', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  itemId: uuid('item_id')
+export const label = pgTable('labels', {
+  id: serial('id').primaryKey(),
+  itemId: integer('item_id')
     .references(() => item.id, { onDelete: 'cascade' })
     .notNull(),
   type: labelType('type').notNull(),

@@ -1,6 +1,6 @@
 import {
   pgTable,
-  uuid,
+  serial,
   varchar,
   text,
   timestamp,
@@ -14,8 +14,8 @@ import { user } from '../users/user'
 import { relations } from 'drizzle-orm'
 import { deliveryRecord } from './deliveryRecord'
 
-export const notification = pgTable('notification', {
-  id: uuid('id').primaryKey().defaultRandom(),
+export const notification = pgTable('notifications', {
+  id: serial('id').primaryKey(),
   userId: integer('user_id')
     .references(() => user.id, { onDelete: 'cascade' })
     .notNull(),
@@ -32,7 +32,7 @@ export const notification = pgTable('notification', {
   }),
   status: notificationStatus('status').notNull().default('PENDING'),
   actionUrl: varchar('action_url', { length: 255 }),
-  entityId: uuid('entity_id'),
+  entityId: integer('entity_id'),
   entityType: varchar('entity_type', { length: 50 }),
   updateDate: timestamp('update_date', {
     withTimezone: true,
