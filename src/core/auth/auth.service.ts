@@ -5,9 +5,9 @@ import { JwtPayload } from './types/jwt-payload.interface'
 import { DisplayableException } from 'src/common/exceptions/displayable.exception'
 import { comparePassword } from 'src/common/utils/encrypter'
 import { DatabaseService } from 'src/global/database/database.service'
-import { person, user } from 'drizzle/schema'
+import { person } from 'drizzle/schema/tables/users/person'
+import { user } from 'drizzle/schema/tables/users/user'
 import { eq } from 'drizzle-orm'
-import { UserRole } from './types/user-role'
 
 @Injectable()
 export class AuthService {
@@ -43,7 +43,7 @@ export class AuthService {
     return {
       token: this.createToken({
         id: userFound.id,
-        role: userFound.userType as UserRole,
+        role: userFound.userType,
       }),
       user: userWithoutPassword,
     }

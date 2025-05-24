@@ -20,12 +20,12 @@ export const itemMaterial = pgTable(
     materialId: integer('material_id')
       .references(() => material.id)
       .notNull(),
-    percentage: integer('percentage'),
     isMainMaterial: boolean('is_main_material').default(false),
     registrationDate: timestamp('registration_date', {
       withTimezone: true,
       mode: 'date',
     }).defaultNow(),
+    active: boolean('active').default(true),
     updateDate: timestamp('update_date', {
       withTimezone: true,
       mode: 'date',
