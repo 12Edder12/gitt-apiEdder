@@ -9,14 +9,27 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ApiPaginatedRes, ApiRes } from './common/types/api-response.interface'
 import { BaseParamsDto } from './common/dtos/base-params.dto'
 import { LogInterceptor } from './common/interceptors/log.interceptor'
+import { join } from 'path'
+import { json, urlencoded } from 'express'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true })
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: true,
+    rawBody: true,
+    cors: true,
+  })
+
+  app.use(json({ limit: '10mb' }))
+  app.use(urlencoded({ extended: true, limit: '10mb' }))
+
   const configService = app.get(CustomConfigService)
   const port = configService.env.PORT
 
   app.enableCors('*')
   app.getHttpAdapter().getInstance().set('trust proxy', true)
+  app.getHttpAdapter().useStaticAssets!(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  })
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -25,7 +38,7 @@ async function bootstrap() {
     }),
   )
   app.useGlobalInterceptors(app.get(ResponseInterceptor))
-  app.useGlobalInterceptors(app.get(LogInterceptor)) // <-- Así lo usas correctamente
+  app.useGlobalInterceptors(app.get(LogInterceptor))
 
   app.useGlobalFilters(new GlobalExceptionFilter())
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
@@ -35,15 +48,17 @@ async function bootstrap() {
     defaultVersion: '1',
   })
   app.setGlobalPrefix('api')
-
   const config = new DocumentBuilder()
     .setTitle('GITT API REST')
     .setDescription(
       'Complete API documentation for the GITT application. This API is designed to provide a comprehensive set of endpoints for managing and interacting with the GITT application.',
     )
     .setVersion('1.0')
-       //.addServer(`http://localhost:${port}`, 'Servidor local')
-    .addServer('https://gitt-api-afvb.onrender.com', 'Servidor de producción KK')
+    .addServer(`http://localhost:${port}`, 'Servidor local')
+    .addServer(
+      'https://gitt-api-afvb.onrender.com',
+      'Servidor de producción KK',
+    )
     .addServer('https://gitt-api-3tw6.onrender.com', 'Servidor de producción')
     .addBearerAuth({
       type: 'http',
@@ -62,8 +77,8 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
-      docExpansion: 'none', // 'list', 'full', 'none'
-      operationsSorter: 'method', // 'alpha', 'method'
+      docExpansion: 'none',
+      operationsSorter: 'method',
       tagsSorter: 'alpha',
       defaultModelsExpandDepth: 1,
       defaultModelExpandDepth: 1,
@@ -74,7 +89,6 @@ async function bootstrap() {
       },
     },
     customSiteTitle: 'GITT API Documentation',
-    // customfavIcon: 'https://nestjs.com/favicon.ico',
     customCss: `
       .swagger-ui .information-container { padding: 20px 0 }
       .swagger-ui .scheme-container { padding: 15px 0 }
